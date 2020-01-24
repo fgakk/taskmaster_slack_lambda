@@ -1,0 +1,68 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Set up slack api secret and s3 bucket for taskmaster. Run this stack before deploying taskmasteer stack
+Parameters:
+  SlackApiToken:
+    Type: String
+    NoEcho: true
+    Description: Enter slack api token of your slack app
+
+Resources:
+  SlackApiTokenSecret:
+    Type: AWS::SecretsManager::Secret
+    Properties:
+      Description: OAuth Token for slack api
+      SecretString: !Ref SlackApiToken
+      Tags:
+        - Key: cf-stack
+          Value: taskmaster-init
+      Name: SlackApiTokenSecret
+
+  TaskmasterRepo:
+    Type: AWS::S3::Bucket
+    Properties:
+      Tags:
+        - Key: cf-stack
+          Value: taskmaster-init
+      BucketName: taskmaster-repo
+
+  TaskmasterRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      Policies:
+        - PolicyName: root
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - logs:*
+                Resource: arn:aws:logs:*:*:*
+              - Effect: Allow
+                Action:
+                  - s3:GetObject
+                  - s3:PutObject
+                Resource: arn:aws:s3:::taskmaster-repo/tasks.json
+
+# output ARN of Secret so it can be used in the tsr-campaign-handler stack
+Outputs:
+  SlackApiTokenSecret:
+    Value: !Ref SlackApiTokenSecret
+    Export:
+      Name: SlackApiTokenSecret
+  TaskmasterRepo:
+    Value: !Ref TaskmasterRepo
+    Export:
+      Name: TaskmasterBucket
+  TaskmasterRole:
+    Value: !GetAtt TaskmasterRole.Arn
+    Export:
+      Name: TaskmasterRole

@@ -1,0 +1,14 @@
+[
+    {
+        "users": ["slackuserId1","slackuserId2","slackuserId3"],
+        "remainingUsers":["slackuserId1","slackuserId2"],
+        "task":"Today you are responsible for kitchen",
+        "assigneeCount":2
+    },
+    {
+        "users": ["slackuserId1","slackuserId2","slackuserId3"],
+        "remainingUsers":["slackuserId1"],
+        "task":"Today you are our moderator for daily",
+        "assigneeCount":1
+    }
+]

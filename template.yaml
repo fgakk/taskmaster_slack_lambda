@@ -1,0 +1,32 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  Cloudformation Template for Taskmaster lambda
+
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 3
+    Environment:
+      Variables:
+        BUCKET_NAME: !ImportValue TaskmasterBucket
+        OBJECT_KEY: tasks.json # if change the name here you need to apply it to aws_init/template.yaml as well for resource permissions
+        SLACK_ACCESS_TOKEN: '{{resolve:secretsmanager:SlackApiTokenSecret}}'
+        SLACK_CHANNEL: # here enter the id of your channel
+
+Resources:
+  TaskMasterFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: function/dist
+      Handler: app.handler
+      Runtime: nodejs12.x
+      Role: !ImportValue TaskmasterRole
+      Events:
+        SendReminder:
+          Type: Schedule # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Description: Schedule for assigning next task
+            Enabled: true
+            Name: TaskSchedule
+            Schedule: cron(0 4 ? * MON-FRI *)

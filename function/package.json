@@ -1,0 +1,51 @@
+{
+  "name": "taskmaster_slack",
+  "version": "1.0.0",
+  "description": "Server for receiving calls from TaskMaster Slack App",
+  "scripts": {
+    "build": "tsc && cpx package.json ./dist",
+    "lint": "eslint function/src --ext ts",
+    "tsc": "tsc",
+    "sam_build": "sam build -t ../template.yaml"
+  },
+  "engines": {
+    "node": "11.6.0",
+    "npm": "6.5.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fgakk/taskmaster_slack.git"
+  },
+  "keywords": [
+    "Slack",
+    "Task",
+    "Management",
+    "Team"
+  ],
+  "author": "fgakk",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fgakk/taskmaster_slack/issues"
+  },
+  "homepage": "https://github.com/fgakk/taskmaster_slack#readme",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "dotenv": "^6.1.0",
+    "nodemon": "1.18.4",
+    "aws-sdk": "^2.605.0"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.40",
+    "@types/node": "^10.17.13",
+    "cpx": "^1.5.0",
+    "eslint": "5.7.0",
+    "eslint-config-airbnb-base": "13.1.0",
+    "eslint-plugin-import": "2.14.0",
+    "eslint-plugin-promise": "4.0.1",
+    "mkdirp": "^0.5.1",
+    "ts-node": "^7.0.1",
+    "tsc": "^1.20150623.0",
+    "typescript": "^3.7.5",
+    "typescript-eslint-parser": "20.0.0"
+  }
+}

@@ -102,3 +102,11 @@ dist
 
 # TernJS port file
 .tern-port
+
+# AWS SAM Directory
+**/.aws-sam
+
+# IDEA Directory
+
+**/.idea
+
