@@ -25,6 +25,12 @@ Resources:
           Value: taskmaster-init
       BucketName: taskmaster-repo
 
+  TaskmasterLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: /aws/lambda/taskmaster
+      RetentionInDays: 3
+
   TaskmasterRole:
     Type: AWS::IAM::Role
     Properties:
@@ -38,14 +44,15 @@ Resources:
             Action:
               - 'sts:AssumeRole'
       Policies:
-        - PolicyName: root
+        - PolicyName: taskmaster-policy
           PolicyDocument:
             Version: 2012-10-17
             Statement:
               - Effect: Allow
                 Action:
-                  - logs:*
-                Resource: arn:aws:logs:*:*:*
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource: !GetAtt TaskmasterLogGroup.Arn
               - Effect: Allow
                 Action:
                   - s3:GetObject
